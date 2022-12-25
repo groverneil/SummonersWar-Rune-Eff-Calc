@@ -1,0 +1,11 @@
+hp 135,375
+hp% 5,8
+atk 10,20
+atk% 5,8
+def 10,20
+def% 5,8
+spd 4,6
+crit_rate% 4,6
+crit_dmg% 4,7
+resistance 4,8
+accurracy 4,8
