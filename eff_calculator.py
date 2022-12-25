@@ -107,6 +107,17 @@ class Rune:
         # This can store the efficiency based on the number of rolls
 
         # We would need another function that calculates efficiency based on actual values.
+
+    def rel_eff(self):
+        pass
+
+        # This function does not account for self.eff_coeff
+
+    def abs_eff(self):
+        pass
+
+        #This function accounts for self.eff_coeff
+        #Can be calculated by using self.rel_eff and self.eff_coeff
     
     def innate_efficiency(self):
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
