@@ -12,6 +12,10 @@ def stat_parser(stat):
     else:
         return [stat.split(' +')[0].lower(), int(stat.split(' +')[1])] if stat[-1] != '%' else [stat.split(' +')[0].lower()+'%', int(stat.replace('%','').split(' +')[1])]
 
+    # This seems redundant.
+    # We can consider Acc and Res to be % values by default.
+
+
 # converts acc and res to their full forms so that they can be called by the rune_vals dictionary  
 def certain_val_check(val):
     val_split = val.split(' +')
@@ -80,11 +84,29 @@ class Rune:
         # efficiency coefficient to determine maximum efficiency for a rune of a different grade
         self.eff_coeff = 0
 
+        # Let us break down the math for the function below:
+
+        '''
+        Rune Rarity         Number of Roles Possible (Not including Innate)
+
+        White               5               
+        Green               6
+        Blue                7
+        Purple              8
+        Orange              9
+        '''
+
     def base_efficiency(self):
         match self.rarity:
-            case 'white': self.eff_coeff = 1/5
-        pass
-        # ill pass the function for now
+            case 'white': self.eff_coeff = 5/9
+            case 'green': self.eff_coeff = 6/9
+            case 'blue': self.eff_coeff = 7/9
+            case 'purple': self.eff_coeff = 8/9
+            case 'orange': self.eff_coeff = 1
+        
+        # This can store the efficiency based on the number of rolls
+
+        # We would need another function that calculates efficiency based on actual values.
     
     def innate_efficiency(self):
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
@@ -95,6 +117,13 @@ class Rune:
             # calculates the innate val efficiency by dividing the innate value by its max
             self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]][1]
         return self.innate_eff
+
+    def total_efficiency(self):
+
+        pass
+        #returns overall efficiency of rune
+        #Accounts for both innate and base stat efficiency.
+        # return value to absolute efficiency
     
     # test function to print values
     def printer(self):
