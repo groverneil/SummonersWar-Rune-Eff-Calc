@@ -1,4 +1,4 @@
-# Contributors: Neil Grover, Ishaan Singh
+"""Contributors: Neil Grover, Ishaan Singh"""
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
 
 FILENAME = r"Rune_stats.txt"
@@ -90,7 +90,7 @@ class Rune:
         self.rarity = base_rarity.lower() if base_rarity.lower() not in ['normal', 'magic', 'rare', 'hero', 'legend'] else color_check(base_rarity.lower())
         self.main = main_stat
         self.innate = certain_val_check(innate_stat.lower()) if innate_stat != '' else innate_stat
-        
+
         # % efficiency of the innate stat if there is one
         self.innate_eff = 0         # calculated value
 
