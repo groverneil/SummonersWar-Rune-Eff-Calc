@@ -73,20 +73,24 @@ class Rune:
     def __init__(self, base_rarity = "", main_stat = "", innate_stat = "", stat_1 = "", stat_2 = "", stat_3 = "", stat_4 = "", pow_lvl = 0):
         # creating the dictionary with all the values
         self.rune_vals = dict()
-        with open(FILENAME) as f1:
-            for line in f1:
+
+        with open(FILENAME, encoding = "utf8") as stat_chart:
+            for line in stat_chart:
                 # these two lines get the values from the text file and split them into the dictionary
                 (key, val) = line.split()
                 self.rune_vals[key] = val
+            
         # converts the default string values extracted from the text file into ints so that
         # they can be used in calculations
         for x in self.rune_vals:
             self.rune_vals[x] = string_to_int_list(self.rune_vals[x])
+
         # IMPORTANT - The values in self.rune_vals are stored in this format {stat_name: [min, max]}
         # the important - and unchangeable stats
         self.rarity = base_rarity.lower() if base_rarity.lower() not in ['normal', 'magic', 'rare', 'hero', 'legend'] else color_check(base_rarity.lower())
         self.main = main_stat
         self.innate = certain_val_check(innate_stat.lower()) if innate_stat != '' else innate_stat
+        
         # % efficiency of the innate stat if there is one
         self.innate_eff = 0         # calculated value
 
