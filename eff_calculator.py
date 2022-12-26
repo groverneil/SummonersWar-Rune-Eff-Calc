@@ -1,5 +1,6 @@
-
+# Contributors: Neil Grover, Ishaan Singh
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
+
 FILENAME = r"Rune_stats.txt"
 
 def string_to_int_list(string_val):
@@ -97,10 +98,10 @@ class Rune:
         self.fourth = certain_val_check(stat_4.lower()) if stat_4 != '' else stat_4
 
         self.stat_rolls = [] # place to fill up how many rolls per stat ranging from 1 - 4
-        self.pl = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
+        self.power_level = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
 
         # relative efficiency measures how efficient a rune is relative to its base type (i.e. blue and purple runes can technically have 100% efficiency)
-        self.r_eff = 0
+        self.rel_eff = 0
         # absolute efficiency measures how good a rune is overall in the game, so runes that are higher base grade and have innate will
         # always have a higher potential efficiency
         self.abs_eff = 0
@@ -138,6 +139,11 @@ class Rune:
         # We would need another function that calculates efficiency based on actual values.
 
     def rel_eff(self):
+
+        '''
+        This function would calculate the relative efficiency of the rune.
+        '''
+
         pass
 
         # This function does not account for self.eff_coeff
@@ -178,8 +184,8 @@ class Rune:
 
         self.innate_eff = self.innate_efficiency()
         print('the rune_dict:')
-        for k in self.rune_vals.keys():
-            print(f'{k} : {self.rune_vals[k]}')
+        for k,j in self.rune_vals.items():
+            print(f'{k} : {j}')
         print('innate efficiency: ', self.innate_eff)
 
 
