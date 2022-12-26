@@ -2,8 +2,8 @@
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
 filename = r"Rune_stats.txt"
 # helper function for the transferring of the values from the text file into the dictionary
-def string_to_int_list(string_val):
-    return [int(x) for x in string_val.split(',')]
+#def string_to_int_list(string_val):
+#    return [int(x) for x in string_val.split(',')]
 
 # splits the input into the stat and the value (i know the code is ver weird but ignore that :D)
 def stat_parser(stat):
@@ -50,11 +50,11 @@ class Rune:
             for line in f1:
                 # these two lines get the values from the text file and split them into the dictionary
                 (key, val) = line.split()
-                self.rune_vals[key] = val
+                self.rune_vals[key] = int(val)
         # converts the default string values extracted from the text file into ints so that
         # they can be used in calculations
-        for x in self.rune_vals:
-            self.rune_vals[x] = string_to_int_list(self.rune_vals[x])
+        #for x in self.rune_vals:
+        #    self.rune_vals[x] = string_to_int_list(self.rune_vals[x])
         # IMPORTANT - The values in self.rune_vals are stored in this format {stat_name: [min, max]}
         # the important - and unchangeable stats
         self.rarity = base_rarity.lower() if base_rarity.lower() not in ['normal', 'magic', 'rare', 'hero', 'legend'] else color_check(base_rarity.lower())
@@ -65,10 +65,10 @@ class Rune:
 
         # all four substats of the rune
         # it puts it throught a function that checks that all the terms will be registered by the dictionary 
-        self.first = certain_val_check(stat_1.lower()) if stat_1 != '' else stat_1
-        self.second = certain_val_check(stat_2.lower()) if stat_2 != '' else stat_2
-        self.third = certain_val_check(stat_3.lower()) if stat_3 != '' else stat_3
-        self.fourth = certain_val_check(stat_4.lower()) if stat_4 != '' else stat_4
+        self.first = certain_val_check(stat_1.lower()) if stat_1 != '' else stat_1.lower()
+        self.second = certain_val_check(stat_2.lower()) if stat_2 != '' else stat_2.lower()
+        self.third = certain_val_check(stat_3.lower()) if stat_3 != '' else stat_3.lower()
+        self.fourth = certain_val_check(stat_4.lower()) if stat_4 != '' else stat_4.lower()
 
         self.stat_rolls = [] # place to fill up how many rolls per stat ranging from 1 - 4
         self.pl = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
@@ -93,7 +93,8 @@ class Rune:
         Orange              8
         '''
 
-    def base_efficiency(self):
+    # to calculate the 
+    def base_rarity_efficiency(self):
         match self.rarity:
             case 'white': self.eff_coeff = 4/8
             case 'green': self.eff_coeff = 5/8
@@ -105,6 +106,9 @@ class Rune:
 
         # We would need another function that calculates efficiency based on actual values.
 
+    def roll_calc(self):
+        pass
+
     def rel_eff(self):
         pass
 
@@ -115,7 +119,8 @@ class Rune:
 
         #This function accounts for self.eff_coeff
         #Can be calculated by using self.rel_eff and self.eff_coeff
-    
+
+    @staticmethod
     def innate_efficiency(self):
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
         # know that the innate should not be considered
@@ -123,7 +128,7 @@ class Rune:
             self.innate_eff = -1
         elif stat_parser(self.innate)[0] in self.rune_vals:
             # calculates the innate val efficiency by dividing the innate value by its max
-            self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]][1]
+            self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]]
         return self.innate_eff
 
     def total_efficiency(self):
@@ -149,9 +154,9 @@ if __name__ == '__main__':
     '''a = input().lower()
     test_var = color_check(a)
     print(test_var)'''
-    #rune = Rune("", "", 'hp +325')
-    #rune.innate_efficiency()
-    #rune.printer()
+    rune = Rune("", "", 'hp +325')
+    rune.innate_efficiency()
+    rune.printer()
 
     
 
