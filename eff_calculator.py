@@ -1,18 +1,17 @@
 
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
 FILENAME = r"Rune_stats.txt"
-# helper function for the transferring of the values from the text file into the dictionary
+
 def string_to_int_list(string_val):
 
-    '''This converts the string roll value to an int'''
+    '''helper function for the transferring of the values from the text file into the dictionary'''
 
     return [int(x) for x in string_val.split(',')]
 
-# splits the input into the stat and the value (i know the code is ver weird but ignore that :D)
 def stat_parser(stat):
 
     '''
-    This function parses certain stats that are mentioned below.
+    splits the input into the stat and the value (i know the code is ver weird but ignore that.
     '''
 
 
@@ -24,24 +23,25 @@ def stat_parser(stat):
     # This seems redundant.
     # We can consider Acc and Res to be % values by default.
 
-
-# converts acc and res to their full forms so that they can be called by the rune_vals dictionary  
 def certain_val_check(val):
 
     '''
-    Formats certain variable inputs for some stats to be consistent
+     converts acc and res to their full form so that they can be called by the rune_vals dictionary.
     '''
 
     val_split = val.split(' +')
     print(val_split)
     # this blocks checks for irregularities in the val types
+
     if val_split[0] == 'acc':
         val_split[0] = 'accuracy' 
     elif val_split[0] == 'res':
         val_split[0] = 'resistance'       
     elif val_split[0][0] == 'c':
+
         # this cancerous line joins crit rate and crit dmg the correct way in case people don't >:(
         val_split[0] = val_split[0].split()[0] + '_' + val_split[0].split()[1]
+
     return ' +'.join(val_split)        
 
 def color_check(rarity):
@@ -149,6 +149,11 @@ class Rune:
         #Can be calculated by using self.rel_eff and self.eff_coeff
     
     def innate_efficiency(self):
+
+        '''
+        returns efficiency of the innate stat
+        '''
+
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
         # know that the innate should not be considered
         if self.innate == "" or stat_parser(self.innate)[0] not in self.rune_vals.keys(): 
