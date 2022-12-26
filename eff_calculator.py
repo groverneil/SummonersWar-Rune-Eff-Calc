@@ -33,17 +33,14 @@ def certain_val_check(val):
 
 # converts the rarity of a rune to its color instead of the type for the monsters who input the type instead of the color
 def color_check(rarity):
-    match rarity.lower():
-        case 'normal':
-            return 'white'  
-        case 'magic':
-            return 'green'       
-        case 'rare':
-            return 'blue'      
-        case 'hero':
-            return 'purple'     
-        case 'legend':
-            return 'orange'
+    val_dict = {
+        'normal': 'white',
+        'magic': 'green',
+        'rare': 'blue',
+        'hero': 'purple',
+        'legend': 'orange'
+    }
+    return val_dict.get(rarity.lower(), 'fuck off')
 
 class Rune:
     def __init__(self, base_rarity = "", main_stat = "", innate_stat = "", stat_1 = "", stat_2 = "", stat_3 = "", stat_4 = "", pow_lvl = 0):
@@ -89,19 +86,19 @@ class Rune:
         '''
         Rune Rarity         Number of Roles Possible (Not including Innate)
 
-        White               5               
-        Green               6
-        Blue                7
-        Purple              8
-        Orange              9
+        White               4               
+        Green               5
+        Blue                6
+        Purple              7
+        Orange              8
         '''
 
     def base_efficiency(self):
         match self.rarity:
-            case 'white': self.eff_coeff = 5/9
-            case 'green': self.eff_coeff = 6/9
-            case 'blue': self.eff_coeff = 7/9
-            case 'purple': self.eff_coeff = 8/9
+            case 'white': self.eff_coeff = 4/8
+            case 'green': self.eff_coeff = 5/8
+            case 'blue': self.eff_coeff = 6/8
+            case 'purple': self.eff_coeff = 7/8
             case 'orange': self.eff_coeff = 1
         
         # This can store the efficiency based on the number of rolls
@@ -152,9 +149,11 @@ if __name__ == '__main__':
     '''a = input().lower()
     test_var = color_check(a)
     print(test_var)'''
-    rune = Rune("", "", 'hp +325')
+    #rune = Rune("", "", 'hp +325')
     #rune.innate_efficiency()
-    rune.printer()
+    #rune.printer()
+
+    
 
     
 
