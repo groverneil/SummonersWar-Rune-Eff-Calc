@@ -1,12 +1,21 @@
 
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
-filename = r"Rune_stats.txt"
+FILENAME = r"Rune_stats.txt"
 # helper function for the transferring of the values from the text file into the dictionary
 def string_to_int_list(string_val):
+
+    '''This converts the string roll value to an int'''
+
     return [int(x) for x in string_val.split(',')]
 
 # splits the input into the stat and the value (i know the code is ver weird but ignore that :D)
 def stat_parser(stat):
+
+    '''
+    This function parses certain stats that are mentioned below.
+    '''
+
+
     if stat.split(' +')[0].lower() in ['acc', 'res', 'accuracy', 'resistance']:
         return [stat.split(' +')[0].lower(), int(stat.split(' +')[1])] if stat[-1] != '%' else [stat.split(' +')[0].lower(), int(stat.replace('%','').split(' +')[1])]
     else:
@@ -18,6 +27,11 @@ def stat_parser(stat):
 
 # converts acc and res to their full forms so that they can be called by the rune_vals dictionary  
 def certain_val_check(val):
+
+    '''
+    Formats certain variable inputs for some stats to be consistent
+    '''
+
     val_split = val.split(' +')
     print(val_split)
     # this blocks checks for irregularities in the val types
@@ -28,11 +42,14 @@ def certain_val_check(val):
     elif val_split[0][0] == 'c':
         # this cancerous line joins crit rate and crit dmg the correct way in case people don't >:(
         val_split[0] = val_split[0].split()[0] + '_' + val_split[0].split()[1]
-    return ' +'.join(val_split)      
-        
+    return ' +'.join(val_split)        
 
-# converts the rarity of a rune to its color instead of the type for the monsters who input the type instead of the color
 def color_check(rarity):
+
+    '''
+    Takes the rune rarity name and returns the color of the rune.
+    '''
+
     match rarity.lower():
         case 'normal':
             return 'white'  
@@ -46,10 +63,16 @@ def color_check(rarity):
             return 'orange'
 
 class Rune:
+
+    '''
+    This class contains all attributes of the rune as well as calc functions.
+    '''
+
+
     def __init__(self, base_rarity = "", main_stat = "", innate_stat = "", stat_1 = "", stat_2 = "", stat_3 = "", stat_4 = "", pow_lvl = 0):
         # creating the dictionary with all the values
         self.rune_vals = dict()
-        with open(filename) as f1:
+        with open(FILENAME) as f1:
             for line in f1:
                 # these two lines get the values from the text file and split them into the dictionary
                 (key, val) = line.split()
@@ -97,6 +120,12 @@ class Rune:
         '''
 
     def base_efficiency(self):
+
+        '''
+        Returns the base efficiency value for the given rarity.
+        Value is calculated with respect to orange runes.
+        '''
+
         match self.rarity:
             case 'white': self.eff_coeff = 5/9
             case 'green': self.eff_coeff = 6/9
@@ -136,10 +165,14 @@ class Rune:
         #Accounts for both innate and base stat efficiency.
         # return value to absolute efficiency
     
-    # test function to print values
     def printer(self):
+
+        '''
+        test function to print values
+        '''
+
         self.innate_eff = self.innate_efficiency()
-        print(f'the rune_dict:')
+        print('the rune_dict:')
         for k in self.rune_vals.keys():
             print(f'{k} : {self.rune_vals[k]}')
         print('innate efficiency: ', self.innate_eff)
@@ -149,9 +182,11 @@ class Rune:
 
 if __name__ == '__main__':
     # testing the stat_parser function (planning to cal)
-    '''a = input().lower()
-    test_var = color_check(a)
-    print(test_var)'''
+
+    # a = input().lower()
+    # test_var = color_check(a)
+    # print(test_var)
+
     rune = Rune("", "", 'hp +325')
     #rune.innate_efficiency()
     rune.printer()
