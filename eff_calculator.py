@@ -5,6 +5,7 @@ filename = r"Rune_stats.txt"
 #def string_to_int_list(string_val):
 #    return [int(x) for x in string_val.split(',')]
 
+
 def stat_parser(stat):
 
     '''
@@ -20,6 +21,8 @@ def stat_parser(stat):
     # This seems redundant.
     # We can consider Acc and Res to be % values by default.
 
+    # 
+
 def certain_val_check(val):
 
     '''
@@ -27,7 +30,7 @@ def certain_val_check(val):
     '''
 
     val_split = val.split(' +')
-    print(val_split)
+    #print(val_split)
     # this blocks checks for irregularities in the val types
 
     if val_split[0] == 'acc':
@@ -62,16 +65,15 @@ class Rune:
         # creating the dictionary with all the values
         self.rune_vals = dict()
 
-        with open(FILENAME, encoding = "utf8") as stat_chart:
+        with open(filename, encoding = "utf8") as stat_chart:
             for line in stat_chart:
                 # these two lines get the values from the text file and split them into the dictionary
                 (key, val) = line.split()
                 self.rune_vals[key] = int(val)
         # converts the default string values extracted from the text file into ints so that
         # they can be used in calculations
-        #for x in self.rune_vals:
-        #    self.rune_vals[x] = string_to_int_list(self.rune_vals[x])
-        # IMPORTANT - The values in self.rune_vals are stored in this format {stat_name: [min, max]}
+
+        # IMPORTANT - The values in self.rune_vals are stored in this format {stat_name: max}
         # the important - and unchangeable stats
         self.rarity = base_rarity.lower() if base_rarity.lower() not in ['normal', 'magic', 'rare', 'hero', 'legend'] else color_check(base_rarity.lower())
         self.main = main_stat
@@ -82,10 +84,18 @@ class Rune:
 
         # all four substats of the rune
         # it puts it throught a function that checks that all the terms will be registered by the dictionary 
-        self.first = certain_val_check(stat_1.lower()) if stat_1 != '' else stat_1.lower()
-        self.second = certain_val_check(stat_2.lower()) if stat_2 != '' else stat_2.lower()
-        self.third = certain_val_check(stat_3.lower()) if stat_3 != '' else stat_3.lower()
-        self.fourth = certain_val_check(stat_4.lower()) if stat_4 != '' else stat_4.lower()
+
+        # I'm making this simpler by just having a list that has all these...would reduce my headache significantly
+        self.stat_list = [0] * 4 
+        # don't pay attention to these theyll make your brain hurt unecessarily....just accept that they work and move on
+        self.stat_list[0] = stat_parser(certain_val_check(stat_1.lower())) if stat_1 != '' else 0 # first stat
+        self.stat_list[1] = stat_parser(certain_val_check(stat_2.lower())) if stat_2 != '' else 0 # second stat
+        self.stat_list[2] = stat_parser(certain_val_check(stat_3.lower())) if stat_3 != '' else 0 # third stat
+        self.stat_list[3] = stat_parser(certain_val_check(stat_4.lower())) if stat_4 != '' else 0 # fourth stat
+
+        # removes the redundant zeroes from the self.stat_list
+        if 0 in self.stat_list:
+            for _ in self.stat_list: self.stat_list.remove(0)
 
         self.stat_rolls = [] # place to fill up how many rolls per stat ranging from 1 - 4
         self.power_level = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
@@ -101,7 +111,8 @@ class Rune:
         # Let us break down the math for the function below:
 
         '''
-        Rune Rarity         Number of Roles Possible (Not including Innate)
+        Rune Rarity         Number of Roles Possible (Not including Innate) These rolls include the base rolls, hence
+        Legend rune = 4 base rolls + 4 power-up rolls = 8 rolls
 
         White               4               
         Green               5
@@ -123,13 +134,23 @@ class Rune:
 
         # We would need another function that calculates efficiency based on actual values.
 
+    # Ishaan <- spent a solid 5 minutes figuring out what in the goddamn fuck this function was.....really need to work on my naming skills D:
     def roll_calc(self):
-        pass
+        # this is probably gonna piss me off no end, but now i try and make this shit (Ishaan)
+        # basically this function calculates how many rolls the rune had...and from there determines its actually efficiency? sounds like that could be fun
+        print("HELLO!")
+        for roll in self.stat_list:
+            self.stat_rolls.append(roll[1]/self.rune_vals[roll[0]])
+
+        # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
+        # also since i dont return anything, self.stat_rolls itself is modified when this shit is called, so uh just remember that
+
+        
 
     def rel_eff(self):
 
         '''
-        This function would calculate the relative efficiency of the rune.
+        This function would calculate the relative efficiency of the rune. (basically a flat efficiency value not considering the rune's base rarity)
         '''
 
         pass
@@ -137,12 +158,15 @@ class Rune:
         # This function does not account for self.eff_coeff
 
     def abs_eff(self):
+        '''
+        And here we give a fuck about the base rarity
+        '''
         pass
 
         #This function accounts for self.eff_coeff
         #Can be calculated by using self.rel_eff and self.eff_coeff
 
-    @staticmethod
+    #@staticmethod  <-- THIS SHIT DIDNT HELP NEIL HAAAALPPPPPPPP
     def innate_efficiency(self):
 
         '''
@@ -171,11 +195,20 @@ class Rune:
         test function to print values
         '''
 
-        self.innate_eff = self.innate_efficiency()
+        '''self.innate_eff = self.innate_efficiency()
         print('the rune_dict:')
         for k,j in self.rune_vals.items():
             print(f'{k} : {j}')
-        print('innate efficiency: ', self.innate_eff)
+        print('innate efficiency: ', self.innate_eff)'''
+
+        print("The stats of each rune as they are saved:")
+        for x in range(len(self.stat_list)):
+            print(f"stat no. {x+1}: {self.stat_list[x]}")
+        
+        print("The stat_list: ", self.stat_list)
+        print(f"The rarity of the rune: {self.rarity}")
+        self.roll_calc()
+        print(f"The total rolls and roll values: {self.stat_rolls}")
 
 
 
@@ -187,8 +220,8 @@ if __name__ == '__main__':
     # test_var = color_check(a)
     # print(test_var)
 
-    rune = Rune("", "", 'hp +325')
-    rune.innate_efficiency()
+    rune = Rune("Rare", "", 'hp +325', "hp +8%", "spd +30", "atk% +6", "res +8")
+    #rune.innate_efficiency()
     rune.printer()
 
     
