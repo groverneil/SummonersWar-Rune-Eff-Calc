@@ -94,8 +94,8 @@ class Rune:
         self.stat_list[3] = stat_parser(certain_val_check(stat_4.lower())) if stat_4 != '' else 0 # fourth stat
 
         # removes the redundant zeroes from the self.stat_list
-        if 0 in self.stat_list:
-            for _ in self.stat_list: self.stat_list.remove(0)
+        while 0 in self.stat_list:
+            self.stat_list.remove(0)
 
         self.stat_rolls = [] # place to fill up how many rolls per stat ranging from 1 - 4
         self.power_level = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     # test_var = color_check(a)
     # print(test_var)
 
-    rune = Rune("Rare", "", 'hp +325', "hp +8%", "spd +30", "atk% +6", "res +8")
+    rune = Rune("orange", "", 'hp +325', "hp +8%")
     #rune.innate_efficiency()
     rune.printer()
 
