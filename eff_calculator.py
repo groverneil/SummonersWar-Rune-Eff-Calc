@@ -2,8 +2,7 @@
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
 filename = r"Rune_stats.txt"
 # helper function for the transferring of the values from the text file into the dictionary
-#def string_to_int_list(string_val):
-#    return [int(x) for x in string_val.split(',')]
+
 
 
 def stat_parser(stat):
@@ -21,7 +20,6 @@ def stat_parser(stat):
     # This seems redundant.
     # We can consider Acc and Res to be % values by default.
 
-    # 
 
 def certain_val_check(val):
 
@@ -145,7 +143,6 @@ class Rune:
         # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
         # also since i dont return anything, self.stat_rolls itself is modified when this shit is called, so uh just remember that
 
-        
 
     def relative_eff(self):
 
