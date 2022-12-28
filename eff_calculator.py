@@ -52,7 +52,7 @@ def color_check(rarity):
         'hero': 'purple',
         'legend': 'orange'
     }
-    return val_dict.get(rarity.lower(), 'fuck off')
+    return val_dict.get(rarity.lower(), 'Not found')
 
 class Rune:
 
@@ -134,32 +134,50 @@ class Rune:
 
         # We would need another function that calculates efficiency based on actual values.
 
-    # Ishaan <- spent a solid 5 minutes figuring out what in the goddamn fuck this function was.....really need to work on my naming skills D:
+    # Ishaan <- spent a solid 5 minutes figuring out what this function was.....really need to work on my naming skills D:
     def roll_calc(self):
         # this is probably gonna piss me off no end, but now i try and make this shit (Ishaan)
         # basically this function calculates how many rolls the rune had...and from there determines its actually efficiency? sounds like that could be fun
-        print("HELLO!")
         for roll in self.stat_list:
             self.stat_rolls.append(roll[1]/self.rune_vals[roll[0]])
+            
 
         # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
         # also since i dont return anything, self.stat_rolls itself is modified when this shit is called, so uh just remember that
 
         
 
-    def rel_eff(self):
+    def relative_eff(self):
 
         '''
         This function would calculate the relative efficiency of the rune. (basically a flat efficiency value not considering the rune's base rarity)
         '''
+        self.roll_calc()
+        temp_eff = 0
+        for value in self.stat_rolls:
+            temp_eff += value
 
-        pass
+        # stores the number of base rolls by rune rarity
+        rolls_dict = {
+            'white': 0,
+            'green' : 1,
+            'blue': 2,
+            'purple': 3,
+            'orange': 4
+        }
+
+        roll_count = rolls_dict[self.rarity] + self.power_level
+        
+        self.rel_eff = round(temp_eff / roll_count, 4) if roll_count > 0 else 0
+
+        # self.rel_eff = round(self.rel_eff + self.innate_eff, 4)
+
 
         # This function does not account for self.eff_coeff
 
     def abs_eff(self):
         '''
-        And here we give a fuck about the base rarity
+        And here we consider about the base rarity
         '''
         pass
 
@@ -180,7 +198,6 @@ class Rune:
         elif stat_parser(self.innate)[0] in self.rune_vals:
             # calculates the innate val efficiency by dividing the innate value by its max
             self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]]
-        return self.innate_eff
 
     def total_efficiency(self):
 
@@ -200,15 +217,17 @@ class Rune:
         for k,j in self.rune_vals.items():
             print(f'{k} : {j}')
         print('innate efficiency: ', self.innate_eff)'''
-
+        self.relative_eff()
         print("The stats of each rune as they are saved:")
         for x in range(len(self.stat_list)):
             print(f"stat no. {x+1}: {self.stat_list[x]}")
         
         print("The stat_list: ", self.stat_list)
         print(f"The rarity of the rune: {self.rarity}")
-        self.roll_calc()
+        # self.roll_calc()
         print(f"The total rolls and roll values: {self.stat_rolls}")
+        print(f"Relative efficiency: {self.rel_eff * 100}%")
+        
 
 
 
@@ -220,7 +239,7 @@ if __name__ == '__main__':
     # test_var = color_check(a)
     # print(test_var)
 
-    rune = Rune("orange", "", 'hp +325', "hp +8%")
+    rune = Rune("orange", "", 'hp +325', "hp +8%", "atk +5%", "spd +5", "res +7")
     #rune.innate_efficiency()
     rune.printer()
 
