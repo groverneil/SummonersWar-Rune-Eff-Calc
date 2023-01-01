@@ -80,7 +80,9 @@ class Rune:
         self.innate = certain_val_check(innate_stat.lower()) if innate_stat != '' else innate_stat
 
         # % efficiency of the innate stat if there is one
+        self.roll_count = 0         #Will be used to store the number of rolls
         self.innate_eff = 0         # calculated value
+        self.overall = 0;           #overall rune efficiency. Brings it all together
 
         # all four substats of the rune
         # it puts it throught a function that checks that all the terms will be registered by the dictionary 
@@ -123,6 +125,11 @@ class Rune:
 
     # to calculate the 
     def base_rarity_efficiency(self):
+
+        '''
+        Returns the rune rarity coeff
+        '''
+
         match self.rarity:
             case 'white': self.eff_coeff = 4/8
             case 'green': self.eff_coeff = 5/8
@@ -138,8 +145,8 @@ class Rune:
     def roll_calc(self):
         # this is probably gonna piss me off no end, but now i try and make this shit (Ishaan)
         # basically this function calculates how many rolls the rune had...and from there determines its actually efficiency? sounds like that could be fun
-        for roll in self.stat_list:
-            self.stat_rolls.append(roll[1]/self.rune_vals[roll[0]])
+        for stat, roll in self.stat_list:
+            self.stat_rolls.append(roll / self.rune_vals[stat])
             
 
         # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
@@ -167,6 +174,8 @@ class Rune:
         }
 
         roll_count = rolls_dict[self.rarity] + self.power_level
+
+        self.roll_count = roll_count;
         
         self.rel_eff = round(temp_eff / roll_count, 4) if roll_count > 0 else 0
 
@@ -175,14 +184,13 @@ class Rune:
 
         # This function does not account for self.eff_coeff
 
-    def abs_eff(self):
+    def calc_abs_eff(self):
         '''
         And here we consider about the base rarity
         '''
-        pass
+        self.abs_eff = self.rel_eff * self.eff_coeff
 
-        #This function accounts for self.eff_coeff
-        #Can be calculated by using self.rel_eff and self.eff_coeff
+        #Pretty simple and straigtforward
 
     #@staticmethod  <-- THIS SHIT DIDNT HELP NEIL HAAAALPPPPPPPP
     def innate_efficiency(self):
@@ -199,12 +207,29 @@ class Rune:
             # calculates the innate val efficiency by dividing the innate value by its max
             self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]]
 
-    def total_efficiency(self):
+    def calc_total_efficiency(self):
 
-        pass
-        #returns overall efficiency of rune
-        #Accounts for both innate and base stat efficiency.
-        # return value to absolute efficiency
+        '''
+        Returns overall efficiency of rune
+        Accounts for both innate and base stat efficiency.
+        '''
+
+        if self.innate_eff < 0:
+
+
+            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1))
+
+            # Based on the logic that you are missing out on an entire 1 max roll from innate
+
+        else:
+
+            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1)) + self.innate_eff * (1 / (self.roll_count + 1))
+
+            # Weighted Average: Rune rolls are weighted according to how much they roll (self.roll_count)
+            # Innate has a static weight of 1.
+
+        #This needs to be called after all other methods 
+        #return value to absolute efficiency
     
     def printer(self):
 
@@ -212,11 +237,12 @@ class Rune:
         test function to print values
         '''
 
-        '''self.innate_eff = self.innate_efficiency()
-        print('the rune_dict:')
-        for k,j in self.rune_vals.items():
-            print(f'{k} : {j}')
-        print('innate efficiency: ', self.innate_eff)'''
+        # '''self.innate_eff = self.innate_efficiency()
+        # print('the rune_dict:')
+        # for k,j in self.rune_vals.items():
+        #     print(f'{k} : {j}')
+        # print('innate efficiency: ', self.innate_eff)'''
+
         self.relative_eff()
         print("The stats of each rune as they are saved:")
         for x in range(len(self.stat_list)):
