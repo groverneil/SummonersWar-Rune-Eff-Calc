@@ -217,13 +217,13 @@ class Rune:
         if self.innate_eff < 0:
 
 
-            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1))
+            self.overall = round(self.abs_eff * (self.roll_count / (self.roll_count + 1)), 4)
 
             # Based on the logic that you are missing out on an entire 1 max roll from innate
 
         else:
 
-            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1)) + self.innate_eff * (1 / (self.roll_count + 1))
+            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1)) + self.innate_eff * (1 / (self.roll_count + 1) * self.innate_eff)
 
             # Weighted Average: Rune rolls are weighted according to how much they roll (self.roll_count)
             # Innate has a static weight of 1.
@@ -244,6 +244,11 @@ class Rune:
         # print('innate efficiency: ', self.innate_eff)'''
 
         self.relative_eff()
+        self.base_rarity_efficiency()
+        self.calc_abs_eff()
+        self.innate_efficiency()
+        self.calc_total_efficiency()
+
         print("The stats of each rune as they are saved:")
         for x in range(len(self.stat_list)):
             print(f"stat no. {x+1}: {self.stat_list[x]}")
@@ -253,6 +258,9 @@ class Rune:
         # self.roll_calc()
         print(f"The total rolls and roll values: {self.stat_rolls}")
         print(f"Relative efficiency: {self.rel_eff * 100}%")
+        print(f"Innate efficiency: {self.innate_eff * 100}%")
+        print(f"Absolute efficiency: {self.abs_eff * 100}%")
+        print(f"Overall efficiency: {self.overall * 100}%")
         
 
 
@@ -266,6 +274,7 @@ if __name__ == '__main__':
     # print(test_var)
 
     rune = Rune("orange", "", 'hp +325', "hp +8%", "atk +5%", "spd +5", "res +7")
+
     #rune.innate_efficiency()
     rune.printer()
 
