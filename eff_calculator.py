@@ -138,7 +138,7 @@ class Rune:
         # basically this function calculates how many rolls the rune had...and from there determines its actually efficiency? sounds like that could be fun
         for roll in self.stat_list:
             self.stat_rolls.append(roll[1]/self.rune_vals[roll[0]])
-            
+           
 
         # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
         # also since i dont return anything, self.stat_rolls itself is modified when this shit is called, so uh just remember that
