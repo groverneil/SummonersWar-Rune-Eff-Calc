@@ -1,6 +1,6 @@
 """Contributors: Neil Grover, Ishaan Singh"""
 # All rune stats are in the Rune_stats.txt file <-- only for 6 star runes
-filename = r"Rune_stats.txt"
+RUNE_ROLL_DATA = r"Rune_stats.txt"
 # helper function for the transferring of the values from the text file into the dictionary
 
 
@@ -40,9 +40,14 @@ def certain_val_check(val):
         # this cancerous line joins crit rate and crit dmg the correct way in case people don't >:(
         val_split[0] = val_split[0].split()[0] + '_' + val_split[0].split()[1]
 
-    return ' +'.join(val_split)        
+    return ' +'.join(val_split)       
 
 def color_check(rarity):
+
+    '''
+    Takes rune rarity and returns the corresponding color of the rune.
+    '''
+
     val_dict = {
         'normal': 'white',
         'magic': 'green',
@@ -59,15 +64,18 @@ class Rune:
     '''
 
 
-    def __init__(self, base_rarity = "", main_stat = "", innate_stat = "", stat_1 = "", stat_2 = "", stat_3 = "", stat_4 = "", pow_lvl = 0):
+    def __init__(self, base_rarity = "", main_stat = "", innate_stat = "",
+    stat_1 = "", stat_2 = "", stat_3 = "", stat_4 = "", pow_lvl = 0):
+
         # creating the dictionary with all the values
         self.rune_vals = dict()
 
-        with open(filename, encoding = "utf8") as stat_chart:
+        with open(RUNE_ROLL_DATA, encoding = "utf8") as stat_chart:
             for line in stat_chart:
                 # these two lines get the values from the text file and split them into the dictionary
                 (key, val) = line.split()
                 self.rune_vals[key] = int(val)
+                
         # converts the default string values extracted from the text file into ints so that
         # they can be used in calculations
 
@@ -80,7 +88,7 @@ class Rune:
         # % efficiency of the innate stat if there is one
         self.roll_count = 0         #Will be used to store the number of rolls
         self.innate_eff = 0         # calculated value
-        self.overall = 0;           #overall rune efficiency. Brings it all together
+        self.overall = 0           #overall rune efficiency. Brings it all together
 
         # all four substats of the rune
         # it puts it throught a function that checks that all the terms will be registered by the dictionary 
@@ -98,23 +106,28 @@ class Rune:
             self.stat_list.remove(0)
 
         self.stat_rolls = [] # place to fill up how many rolls per stat ranging from 1 - 4
-        self.power_level = pow_lvl // 3 if pow_lvl < 15 else 4   # made sure this always rounds down and if its 15 then its the same as 12
+        self.power_level = pow_lvl // 3 if pow_lvl < 15 else 4   
+        
+        # made sure this always rounds down and if its 15 then its the same as 12
 
-        # relative efficiency measures how efficient a rune is relative to its base type (i.e. blue and purple runes can technically have 100% efficiency)
+        # relative efficiency measures how efficient a rune is relative to its base type 
+        # (i.e. blue and purple runes can technically have 100% efficiency)
         self.rel_eff = 0
-        # absolute efficiency measures how good a rune is overall in the game, so runes that are higher base grade and have innate will
-        # always have a higher potential efficiency
+
+        # absolute efficiency measures how good a rune is overall in the game
+        # so runes that are higher base grade and have innate will always have a higher potential efficiency
         self.abs_eff = 0
+
         # efficiency coefficient to determine maximum efficiency for a rune of a different grade
         self.eff_coeff = 0
 
         # Let us break down the math for the function below:
 
         '''
-        Rune Rarity         Number of Roles Possible (Not including Innate) These rolls include the base rolls, hence
+        Number of Roles Possible (Not including Innate) These rolls include the base rolls, hence
         Legend rune = 4 base rolls + 4 power-up rolls = 8 rolls
 
-        White               4               
+        White               4              
         Green               5
         Blue                6
         Purple              7
@@ -141,10 +154,15 @@ class Rune:
 
     # Ishaan <- spent a solid 5 minutes figuring out what this function was.....really need to work on my naming skills D:
     def roll_calc(self):
+
+        '''
+        Calculates the number of max rolls in a rune.
+        Does not account for innates. 
+        '''
+
         # this is probably gonna piss me off no end, but now i try and make this shit (Ishaan)
-        # basically this function calculates how many rolls the rune had...and from there determines its actually efficiency? sounds like that could be fun
-        for roll in self.stat_list:
-            self.stat_rolls.append(roll[1]/self.rune_vals[roll[0]])
+        for stat, roll in self.stat_list:
+            self.stat_rolls.append(roll/self.rune_vals[stat])
            
 
         # as I thought, the function itself was pretty simple, but the number of edits I've had to make because of it are making me mad
@@ -154,7 +172,8 @@ class Rune:
     def relative_eff(self):
 
         '''
-        This function would calculate the relative efficiency of the rune. (basically a flat efficiency value not considering the rune's base rarity)
+        This function would calculate the relative efficiency of the rune. 
+        (basically a flat efficiency value not considering the rune's base rarity)
         '''
         self.roll_calc()
         temp_eff = 0
@@ -172,7 +191,7 @@ class Rune:
 
         roll_count = rolls_dict[self.rarity] + self.power_level
 
-        self.roll_count = roll_count;
+        self.roll_count = roll_count
         
         self.rel_eff = round(temp_eff / roll_count, 4) if roll_count > 0 else 0
 
@@ -198,7 +217,7 @@ class Rune:
 
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
         # know that the innate should not be considered
-        if self.innate == "" or stat_parser(self.innate)[0] not in self.rune_vals.keys(): 
+        if self.innate == "" or stat_parser(self.innate)[0] not in self.rune_vals:
             self.innate_eff = -1
         elif stat_parser(self.innate)[0] in self.rune_vals:
             # calculates the innate val efficiency by dividing the innate value by its max
@@ -247,8 +266,8 @@ class Rune:
         self.calc_total_efficiency()
 
         print("The stats of each rune as they are saved:")
-        for x in range(len(self.stat_list)):
-            print(f"stat no. {x+1}: {self.stat_list[x]}")
+        for index, stat in enumerate(self.stat_list):
+            print(f"stat no. {index+1}: {stat}")
         
         print("The stat_list: ", self.stat_list)
         print(f"The rarity of the rune: {self.rarity}")
