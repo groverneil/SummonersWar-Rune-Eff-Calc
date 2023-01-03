@@ -208,7 +208,6 @@ class Rune:
 
         #Pretty simple and straigtforward
 
-    #@staticmethod  <-- THIS SHIT DIDNT HELP NEIL HAAAALPPPPPPPP
     def innate_efficiency(self):
 
         '''
@@ -219,9 +218,11 @@ class Rune:
         # know that the innate should not be considered
         if self.innate == "" or stat_parser(self.innate)[0] not in self.rune_vals:
             self.innate_eff = -1
+
         elif stat_parser(self.innate)[0] in self.rune_vals:
+
             # calculates the innate val efficiency by dividing the innate value by its max
-            self.innate_eff = stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]]
+            self.innate_eff = round( stat_parser(self.innate)[1] / self.rune_vals[stat_parser(self.innate)[0]], 4)
 
     def calc_total_efficiency(self):
 
@@ -233,16 +234,17 @@ class Rune:
         if self.innate_eff < 0:
 
 
-            self.overall = round(self.abs_eff * (self.roll_count / (self.roll_count + 1)), 4)
+            self.overall = round(self.abs_eff * (8 / 9), 4)
 
             # Based on the logic that you are missing out on an entire 1 max roll from innate
 
         else:
 
-            self.overall = self.abs_eff * (self.roll_count / (self.roll_count + 1)) + self.innate_eff * (1 / (self.roll_count + 1) * self.innate_eff)
+            self.overall = round( (self.abs_eff * (8 / 9) + self.innate_eff * (1 / 9 * self.innate_eff)), 4)
 
-            # Weighted Average: Rune rolls are weighted according to how much they roll (self.roll_count)
-            # Innate has a static weight of 1.
+            # Weighted Average: Rune rolls are weighted according to how many rolls they can account for: 8/9
+            # 8 rolls are from base and 1 roll from innate: 9 rolls
+            # Innate has a static weight of 1/9 by same logic.
 
         #This needs to be called after all other methods 
         #return value to absolute efficiency
