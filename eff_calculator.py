@@ -217,7 +217,7 @@ class Rune:
         # if there is no innate or the innate is incorrect, then return -1 which should let the calculation functionn
         # know that the innate should not be considered
         if self.innate == "" or stat_parser(self.innate)[0] not in self.rune_vals:
-            self.innate_eff = -1
+            self.innate_eff = 0
 
         elif stat_parser(self.innate)[0] in self.rune_vals:
 
@@ -231,23 +231,13 @@ class Rune:
         Accounts for both innate and base stat efficiency.
         '''
 
-        if self.innate_eff < 0:
+        self.overall = round( self.abs_eff + self.innate_eff, 4)
 
+        # Weighted Average: Rune rolls are weighted according to how many rolls they can account for: 8/9
+        # 8 rolls are from base and 1 roll from innate: 9 rolls
+        # Innate has a static weight of 1/9 by same logic.
 
-            self.overall = round(self.abs_eff * (8 / 9), 4)
-
-            # Based on the logic that you are missing out on an entire 1 max roll from innate
-
-        else:
-
-            self.overall = round( (self.abs_eff * (8 / 9) + self.innate_eff * (1 / 9 * self.innate_eff)), 4)
-
-            # Weighted Average: Rune rolls are weighted according to how many rolls they can account for: 8/9
-            # 8 rolls are from base and 1 roll from innate: 9 rolls
-            # Innate has a static weight of 1/9 by same logic.
-
-        #This needs to be called after all other methods 
-        #return value to absolute efficiency
+        #This needs to be called after all other methods
     
     def printer(self):
 
@@ -267,6 +257,8 @@ class Rune:
         self.innate_efficiency()
         self.calc_total_efficiency()
 
+        #Always call functions in this order.
+
         print("The stats of each rune as they are saved:")
         for index, stat in enumerate(self.stat_list):
             print(f"stat no. {index+1}: {stat}")
@@ -277,7 +269,7 @@ class Rune:
         print(f"The total rolls and roll values: {self.stat_rolls}")
         print(f"Relative efficiency: {self.rel_eff * 100}%")
         print(f"Innate efficiency: {self.innate_eff * 100}%")
-        print(f"Absolute efficiency: {self.abs_eff * 100}%")
+        print(f"Base Rune efficiency: {self.abs_eff * 100}%")
         print(f"Overall efficiency: {self.overall * 100}%")
         
 
