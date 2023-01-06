@@ -190,7 +190,7 @@ class Rune:
 
         roll_count = rolls_dict[self.rarity] + self.power_level
         
-        self.rel_eff = round(temp_eff / roll_count, 4) if roll_count > 0 else 0
+        self.rel_eff = temp_eff / roll_count if roll_count > 0 else 0
 
         # self.rel_eff = round(self.rel_eff + self.innate_eff, 4)
 
@@ -228,7 +228,7 @@ class Rune:
         Accounts for both innate and base stat efficiency.
         '''
 
-        self.overall = round( self.abs_eff + self.innate_eff * (1 / (self.eff_coeff*8) ) , 4)
+        self.overall = self.abs_eff + self.innate_eff * (1 / (self.eff_coeff*8) )
 
         # We weight the innate stat equally with the rest of the rune.
         # This is done because the innate stat has a very high value due to reap potential.
@@ -264,10 +264,10 @@ class Rune:
         print(f"The rarity of the rune: {self.rarity}")
         # self.roll_calc()
         print(f"The total rolls and roll values: {self.stat_rolls}")
-        print(f"Relative efficiency: {self.rel_eff * 100}%")
-        print(f"Innate efficiency: {self.innate_eff * 100}%")
-        print(f"Base Rune efficiency: {self.abs_eff * 100}%")
-        print(f"Overall efficiency: {self.overall * 100}%")
+        print(f"Relative efficiency: {self.rel_eff * 100:.2f}%")
+        print(f"Innate efficiency: {self.innate_eff * 100:.2f}%")
+        print(f"Base Rune efficiency: {self.abs_eff * 100:.2f}%")
+        print(f"Overall efficiency: {self.overall * 100:.2f}%")
         
 
 
