@@ -86,8 +86,7 @@ class Rune:
         self.innate = certain_val_check(innate_stat.lower()) if innate_stat != '' else innate_stat
 
         # % efficiency of the innate stat if there is one
-        self.roll_count = 0         #Will be used to store the number of rolls
-        self.innate_eff = 0         # calculated value
+        self.innate_eff = 0        # calculated value
         self.overall = 0           #overall rune efficiency. Brings it all together
 
         # all four substats of the rune
@@ -190,8 +189,6 @@ class Rune:
         }
 
         roll_count = rolls_dict[self.rarity] + self.power_level
-
-        self.roll_count = roll_count
         
         self.rel_eff = round(temp_eff / roll_count, 4) if roll_count > 0 else 0
 
@@ -233,9 +230,9 @@ class Rune:
 
         self.overall = round( self.abs_eff + self.innate_eff, 4)
 
-        # Weighted Average: Rune rolls are weighted according to how many rolls they can account for: 8/9
-        # 8 rolls are from base and 1 roll from innate: 9 rolls
-        # Innate has a static weight of 1/9 by same logic.
+        # We weight the innate stat equally with the rest of the rune.
+        # This is done because the innate stat has a very high value due to reap potential.
+        # The range of efficiency can reach upto 200% this way.
 
         #This needs to be called after all other methods
     
