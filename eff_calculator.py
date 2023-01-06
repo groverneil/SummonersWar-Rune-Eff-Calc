@@ -228,7 +228,7 @@ class Rune:
         Accounts for both innate and base stat efficiency.
         '''
 
-        self.overall = round( self.abs_eff + self.innate_eff, 4)
+        self.overall = round( self.abs_eff + self.innate_eff * (1 / (self.eff_coeff*8) ) , 4)
 
         # We weight the innate stat equally with the rest of the rune.
         # This is done because the innate stat has a very high value due to reap potential.
@@ -280,7 +280,7 @@ if __name__ == '__main__':
     # test_var = color_check(a)
     # print(test_var)
 
-    rune = Rune("orange", "", 'hp +325', "hp +8%", "atk +5%", "spd +5", "res +7")
+    rune = Rune("orange", "", 'hp +325', "hp +16%", "atk +18%", "spd +10", "res +7", 12)
 
     #rune.innate_efficiency()
     rune.printer()
